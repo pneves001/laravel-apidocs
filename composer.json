@@ -22,7 +22,7 @@
     ],
     "require": {
         "php": "^8.0 || 8.4",
-        "laravel/framework": "^6.0 || ^7.0 || ^8.0 || ^9.0" || ^10.0 || ^ll.0 || ^12.0"
+        "laravel/framework": "^12.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
