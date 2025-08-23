@@ -1,7 +1,7 @@
 {
-    "name": "johnylemon/laravel-apidocs",
+    "name": "pneves001/laravel-apidocs",
     "type": "library",
-    "description": "Laravel API documentation generating tool",
+    "description": "Laravel API documentation generating tool. This is a fork of thet johnylemon/laravel-apidocs pakcage to update dependencies to work with laravel 12.",
     "license": "MIT",
     "authors": [
         {
