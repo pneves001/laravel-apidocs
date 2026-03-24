@@ -1,9 +1,13 @@
 {
     "name": "pneves001/laravel-apidocs",
     "type": "library",
-    "description": "Laravel API documentation generating tool. This is a fork of thet johnylemon/laravel-apidocs pakcage to update dependencies to work with laravel 12.",
+    "description": "Laravel API documentation generating tool. This is a fork of the original johnylemon/laravel-apidocs package, enhanced with professional features.",
     "license": "MIT",
     "authors": [
+        {
+            "name": "Philip Neves",
+            "email": "philipneves@example.com"
+        },
         {
             "name": "Piotr Krzempek",
             "email": "hello@johnylemon.dev",
@@ -33,7 +37,7 @@
             "src/helpers.php"
         ],
         "psr-4": {
-            "Johnylemon\\Apidocs\\": "src/"
+            "Pneves001\\Apidocs\\": "src/"
         }
     },
     "autoload-dev": {
@@ -41,13 +45,13 @@
             "src/helpers.php"
         ],
         "psr-4": {
-            "Johnylemon\\Apidocs\\Tests\\": "tests"
+            "Pneves001\\Apidocs\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Johnylemon\\Apidocs\\Providers\\ApidocsServiceProvider"
+                "Pneves001\\Apidocs\\Providers\\ApidocsServiceProvider"
             ]
         }
     },

@@ -1,6 +1,6 @@
 <?php
 
-use Johnylemon\Apidocs\Tests\Data\TestEndpoint;
+use Pneves001\Apidocs\Tests\Data\TestEndpoint;
 
 Route::get('test', function() {})->name('test')->apidocs(TestEndpoint::class);
 Route::get('anothertest', function() { return []; })->name('anothertest')->apidocs(TestEndpoint::class);

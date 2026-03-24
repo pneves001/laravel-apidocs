@@ -18,6 +18,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Logo
+    |--------------------------------------------------------------------------
+    |
+    | Company logo to show in the documentation
+    |
+    */
+    'logo' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Domain Address
     |--------------------------------------------------------------------------
     |
@@ -32,11 +42,11 @@ return [
     | This package can export api documentation data with different format
     | if you would like.
     |
-    | By default `Johnylemon\Apidocs\Exporter` class will be used,
+    | By default `Pneves001\Apidocs\Exporter` class will be used,
     | but feel free to use your own, if you would like to do so
     |
     */
-    'exporter' => Johnylemon\Apidocs\Exporter::class,
+    'exporter' => Pneves001\Apidocs\Exporter::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -73,6 +83,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Markdown data file location
+    |--------------------------------------------------------------------------
+    |
+    | Exported markdown file location (useful for AI)
+    |
+    */
+    'markdown_file_path' => env('APIDOCS_MD_FILE_PATH', storage_path('apidocs.md')),
+
+    /*
+    |--------------------------------------------------------------------------
     | Directories
     |--------------------------------------------------------------------------
     |
@@ -84,5 +104,28 @@ return [
     'dir' => [
         'endpoints' => 'Apidocs/Endpoints',
         'params' => 'Apidocs/Params',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stacks
+    |--------------------------------------------------------------------------
+    |
+    | If you want to support multiple docs stacks (e.g. external, internal)
+    | you can define them here. If this array is empty, the default 
+    | configuration above will be used.
+    |
+    */
+    'stacks' => [
+        // 'internal' => [
+        //      'uri' => '/apidocs/internal',
+        //      'file_path' => storage_path('apidocs-internal.json'),
+        //      'markdown_file_path' => storage_path('apidocs-internal.md'),
+        //      'info' => [
+        //          'version' => '1.0',
+        //          'title' => 'Internal API',
+        //          'description' => 'Internal API documentation',
+        //      ],
+        // ]
     ],
 ];

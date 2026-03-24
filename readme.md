@@ -1,7 +1,9 @@
 # Laravel API documentation generating tool
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/johnylemon/laravel-apidocs/tests?label=tests)
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/johnylemon/laravel-apidocs)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/pneves001/laravel-apidocs/tests.yml?label=tests)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/pneves001/laravel-apidocs)
+
+> **Note:** This package is a fork of the original [johnylemon/laravel-apidocs](https://github.com/johnylemon/laravel-apidocs) package. It has been updated to support modern Laravel versions and enhanced with professional features like multiple API stacks, code snippets, and AI-ready exports.
 
 ### The problem
 I don't like writing tons of lines of stupid annotations just to have hope that api documentation will be generated correctly without errors that says nothing. And I am not the only one. [More](WHY.md).
@@ -13,29 +15,28 @@ This package solves this problem the way I like - by writing PHP code.
 This package adds `apidocs` method to [Laravel](https://github.com/laravel/laravel) routes, where you can define route definitions using code you use every day.
 
 **This way you can:**
- - reuse, extend and modify existing api definitions
- - create generic endpoint definitions and just modify them ad-hoc or by creating child classes
- - define multiple examples
- - define multiple sample responses
- - define and reuse parameter definitions
- - make your controllers readable again
-
+ - Create professional, interactive API documentation.
+ - **Multiple API Stacks**: Separate Public, Internal, and POS APIs easily.
+ - **Global Authorization**: Set a token once for the entire session.
+ - **Code Snippets**: Instant cURL and JavaScript snippets for every endpoint.
+ - **Parameter Tables**: Clear, structured documentation of all request parameters.
+ - **AI-Ready Export**: Optimized Markdown files for LLM consumption.
+ - **Multiple Responses**: Document various scenarios for the same status code.
 
 ![img](screenshot.png)
 
 ## Getting started
 
- 1. Add `johnylemon/laravel-apidocs` repository
+ 1. Add `pneves001/laravel-apidocs` repository
 
+```bash
+composer require pneves001/laravel-apidocs
 ```
-composer require johnylemon/laravel-apidocs
-```
 
-2. Register `Johnylemon\Apidocs\Providers\ApidocsServiceProvider` provider if not registered automagically .
-
+2. Register `Pneves001\Apidocs\Providers\ApidocsServiceProvider` provider if not registered automatically.
 
 3. Install package. This command will publish all required assets.
-```
+```bash
 php artisan apidocs:install
 ```
 
@@ -46,7 +47,7 @@ php artisan apidocs:install
 
 This package ships with command for rapid route definition generation.
 
-```
+```bash
 php artisan apidocs:endpoint SampleEndpoint
 ```
 Brand new `SampleEndpoint` class will be placed within `app\Apidocs\Endpoints` directory.
@@ -59,8 +60,8 @@ This class contains only one `describe` method, where you have to use any of ava
 
 namespace App\Apidocs\Endpoints;
 
-use Johnylemon\Apidocs\Endpoints\Endpoint;
-use Johnylemon\Apidocs\Facades\Param;
+use Pneves001\Apidocs\Endpoints\Endpoint;
+use Pneves001\Apidocs\Facades\Param;
 
 class SampleEndpoint extends Endpoint
 {
@@ -70,12 +71,48 @@ class SampleEndpoint extends Endpoint
             ->desc('Returns paginated list of users');
     }
 }
-
 ```
 
-As you can see we set title and description as endpoint definition.
-Every [method](#endpoint-available-methods) returns endpoint instance so you can chain them.
+## Advanced Features
 
+### Multiple API Stacks
+You can generate separate documentation for different parts of your system (e.g., Public API, Internal API).
+
+**1. Configuration** in `config/apidocs.php`:
+```php
+'stacks' => [
+    'internal' => [
+         'uri' => '/apidocs/internal',
+         'file_path' => storage_path('apidocs-internal.json'),
+         'markdown_file_path' => storage_path('apidocs-internal.md'),
+         'info' => [
+             'title' => 'Internal API',
+         ],
+    ]
+],
+```
+
+**2. Usage in Routes**:
+```php
+Route::get('/api/internal/users', 'InternalUserController@index')
+     ->apidocs(InternalUserDoc::class, 'internal');
+```
+
+### Global Authorization
+In the documentation UI, you'll find a **Bearer Token** input in the sidebar. Setting this once will:
+- Automatically add the `Authorization: Bearer <token>` header to all "Try It" requests.
+- Include the token in all generated code snippets.
+
+### Code Snippets
+Every endpoint automatically generates ready-to-use snippets for **cURL** and **JavaScript (Fetch)**. These snippets update dynamically based on your path parameters, query strings, and authorization token.
+
+### AI-Ready Markdown Export
+When you run `php artisan apidocs:generate`, the system generates a structured `.md` file alongside the JSON. This file is optimized for consumption by AI assistants, making it easy to provide full API context to tools like ChatGPT or Claude.
+
+### Branding
+Add your company logo by setting the `logo` key in `config/apidocs.php`. It will appear at the top of the sidebar.
+
+---
 
 ### <a name="endpoint-available-methods"></a> Endpoint available methods
 
@@ -148,8 +185,8 @@ $this->query([
 Defines endpoint route params. See: [parameters](#parameters)
 
 ```php
-$this->query([
-    'page' => Param::type('int')
+$this->params([
+    'id' => Param::int()->required()
 ])
 ```
 
@@ -157,8 +194,9 @@ $this->query([
 Defines endpoint body params. See: [parameters](#parameters)
 
 ```php
-$this->query([
-    'page' => Param::type('int')
+$this->body([
+    'name' => Param::string()->required(),
+    'email' => Param::string()->required()
 ])
 ```
 
@@ -166,7 +204,7 @@ $this->query([
 Defines endpoint header
 
 ```php
-$this->header('x-johnylemon', 'apidocs')
+$this->header('x-pneves001', 'apidocs')
 ```
 
 #### <a name="endpoint-headers"></a> headers
@@ -174,7 +212,7 @@ Defines multiple endpoint header at once
 
 ```php
 $this->headers([
-    'x-johnylemon' => 'apidocs',
+    'x-pneves001' => 'apidocs',
     'x-laravel' => 'framework'
 ])
 ```
@@ -184,9 +222,9 @@ Defines endpoint example. Optionally you can define example title
 
 ```php
 $this->example([
-    'name' => 'johnylemon',
-    'web' => 'https://johnylemon.dev',
-    'email' => 'hello@johnylemon.dev'
+    'name' => 'pneves001',
+    'web' => 'https://pneves001.dev',
+    'email' => 'hello@pneves001.dev'
 ], 'Store user')
 ```
 
@@ -197,26 +235,30 @@ Define multiple endpoint examples at once
 $this->examples([
     [
         'name' => 'johny',
-        'web' => 'https://johnylemon.dev',
-        'email' => 'hello@johnylemon.dev'
+        'web' => 'https://pneves001.dev',
+        'email' => 'hello@pneves001.dev'
     ],
     [
         'name' => 'lemon',
-        'web' => 'https://johnylemon.dev',
-        'email' => 'hello@johnylemon.dev'
+        'web' => 'https://pneves001.dev',
+        'email' => 'hello@pneves001.dev'
     ]
 ])
 ```
 
 #### <a name="endpoint-returns"></a> returns
-Define sample return value with status code. OPtinally you may define response description.
+Define sample return value with status code. Optionally you may define response description.
+You can call this multiple times for the same status code to show different scenarios in the UI tabs.
 
 ```php
 $this->returns(201, [
     'name' => 'johny',
-    'web' => 'https://johnylemon.dev',
-    'email' => 'hello@johnylemon.dev'
+    'web' => 'https://pneves001.dev',
+    'email' => 'hello@pneves001.dev'
 ], 'User created')
+->returns(201, [
+    'name' => 'Existing User',
+], 'User already exists')
 ->returns(401, [
     'status' => 'unauthorized',
 ], 'Auth issue');
@@ -224,21 +266,11 @@ $this->returns(201, [
 
 Additionally you can use methods like `returns201` (or any other status code)
 ```php
-
-// calling this ...
 $this->returns201([
     'name' => 'johny',
-    'web' => 'https://johnylemon.dev',
-    'email' => 'hello@johnylemon.dev'
+    'web' => 'https://pneves001.dev',
+    'email' => 'hello@pneves001.dev'
 ], 'User created');
-
-// ... is equivalent of this...
-
-$this->returns(201, [
-    'name' => 'johny',
-    'web' => 'https://johnylemon.dev',
-    'email' => 'hello@johnylemon.dev'
-], 'User created')
 ```
 
 ## Endpoint definition usage
@@ -248,10 +280,9 @@ Okay, you created your first endpoint definition. Now it's time to use it as som
 Lets assume you have following routes:
 
 ```php
-
 Route::get('api/users', [UsersController::class, 'index']);
-
 ```
+
 If you want to use `App\Apidocs\Endpoints\SampleEndpoint` class as definition for first of them you should simply do this:
 
 ```php
@@ -266,306 +297,50 @@ and... yes, thats it!
 
 The only thing you have to do now is to call `php artisan apidocs:generate` command and visit `/apidocs` route to see it in action!
 
-> :warning: **This package must clear route cache to generate apidocs properly.** If you are using route caching in your production environment rememeber to call `artisan route:cache` after `artisan apidocs:generate` command
-
-Because `apidocs` method returns endpoint class, you can chain methods during route definition. For example, you may want to mark your route as deprecated:
-
-```php
-
-use App\Apidocs\Endpoints\SampleEndpoint;
-
-Route::get('api/users', [UsersController::class, 'index'])->apidocs(SampleEndpoint::class)->deprecated();
-
-
-```
-
-And because `deprecated` method returns endpoint as well, you are allowed to use [other endpoint methods](#endpoint-available-methods).
-
-> :warning: **After calling `apidocs` method you cannot use route-specific methods**, like, say, `name` method.
-Be sure to call `apidocs` method after all framework route-specific methods are called.
+> :warning: **This package must clear route cache to generate apidocs properly.** If you are using route caching in your production environment remember to call `artisan route:cache` after `artisan apidocs:generate` command
 
 ### Resource routes
 
 Sometimes you would like to use `resource` or `apiResource` methods to create bunch of typical CRUD endpoints. To specify definitions for these endpoints you have to use their names:
 
 ```php
-
 Route::resource('posts', PostsController::class)->apidocs([
     'posts.index' => PostsIndexEndpoint::class,
     'posts.store' => PostStoreEndpoint::class,
 ]);
-
-```
-As you can see, you may ommit endpoints you dont want to be documented.
-
-Sometimes you may be using `resources` or `apiResources` methods to create bunch of CRUDs at once. Because Laravel does not provide any handy hook for that, routes defined that way (and any other named routes!) may be documented using `apidocs` helper:
-
-```php
-
-//
-// your resoures
-//
-Route::resources([
-    'users' => UsersController::class,
-    'posts' => PostsController::class,
-]);
-
-//
-// defining endpoints
-//
-apidocs([
-    'posts.index'   => PostsIndexEndpoint::class,
-    'posts.store'   => PostStoreEndpoint::class,
-    'users.index'   => UsersIndexEndpoint::class,
-    'users.store'   => UserStoreEndpoint::class,
-    'users.destroy' => UserStoreEndpoint::class,
-]);
-
 ```
 
-As metioned earlier, you may ommit endpoints you don't want to be documented.
-
-## <a name="parameters"></a>Parameters
-
-Some routes contains route parameters, like `{user}` segment.
-Sometimes you also want to use required or optional query parameters.
-Routes like `POST`, `PATCH`, `PUT` almost always expects some payload.
+### <a name="parameters"></a>Parameters
 
 You can define them using params, and pass them as array to `query`, `body` and `params` method when describing endpoint.
 
-Lets assume your `index` route from previously presented routes expects optional `page` parameter.
-
-Your definition should now contain additional `query` method call with array of possible parameters. After that your code will look like that:
-
-
 ```php
-<?php
-
-namespace App\Apidocs\Endpoints;
-
-use Johnylemon\Apidocs\Endpoints\Endpoint;
-use Johnylemon\Apidocs\Facades\Param;
-
-class SampleEndpoint extends Endpoint
-{
-    public function describe(): void
-    {
-        $this->title('List users')
-            ->desc('Returns paginated list of users')
-            ->query([
-                Param::int('page')->example(1)->default(1)->optional()
-            ])
-    }
-}
-
-```
-Note that we did not specify parameter name (`page`) by array key. It is not necessary when you define parameter name within class. But of course you can define them in different way:
-
-
-```php
-
-use Johnylemon\Apidocs\Facades\Param;
+use Pneves001\Apidocs\Facades\Param;
 
 $this->query([
-
     // parameter name will be `page`
-    Param::int('page')->example(1)->default(1)->optional()
-
-    // same effect:
-    'page' => Param::int('page')->example(1)->default(1)->optional()
-
-    // same effect:
-    'page' => Param::type('int')->example(1)->default(1)->optional()
-
-    // this parameter will be named `page_number`
-    'page_number' => Param::int('page')->example(1)->default(1)->optional()
+    'page' => Param::int()->example(1)->default(1)->optional()->description('Page number')
 ])
-
-```
-
-As you can see, when parameter name is defined in both, array key and param name, array key will take precedence allowing you to create reusable [custom parameters](#custom-parameters).
-
-Route parameters and request body parameters can be defined same way.
-
-
-### Available methods
-
-- [type](#param-type)
-- [name](#param-name)
-- [description](#param-description)
-- [desc](#param-desc)
-- [required](#param-required)
-- [optional](#param-optional)
-- [enum](#param-enum)
-- [possible](#param-possible)
-- [default](#param-default)
-- [example](#param-example)
-- [eg](#param-eg)
-
-
-#### <a name="param-type"></a> type
-Define parameter type
-
-```php
-Param::type('int');
-```
-
-#### <a name="param-name"></a> name
-Define parameter name
-
-```php
-Param::name('username');
-```
-
-#### <a name="param-description"></a> description
-Define parameter description
-
-```php
-Param::description('Unique username');
-```
-
-#### <a name="param-desc"></a> desc
-Alias of `description`. See [description](#param-description)
-
-
-#### <a name="param-required"></a> required
-Mark parameter as required
-
-```php
-Param::required();
-```
-
-#### <a name="param-optional"></a> optional
-Mark parameter as optional
-
-```php
-Param::optional();
-```
-
-#### <a name="param-possible"></a> possible
-Set parameter possible values
-```php
-Param::possible([10, 100, 1000]);
-```
-
-#### <a name="param-enum"></a> enum
-Alias for `possible`. See [possible](#param-possible)
-```php
-Param::enum([10, 100, 1000]);
-```
-
-
-#### <a name="param-default"></a> default
-Set parameter default value.
-
-```php
-Param::default(42);
-```
-
-#### <a name="param-example"></a> example
-Set parameter example.
-
-```php
-Param::example(42);
-```
-
-
-#### <a name="param-eg"></a> eg
-Alias for `example`. See [example](#param-example)
-
-Param class makes use of magic `__call` method and allow you to define parameter type and name at once by using one of these methods: `string`, `array`, `boolean`, `bool`, `integer` or `int`
-
-```php
-
-use Johnylemon\Apidocs\Facades\Param;
-
-$this->query([
-    Param::string('slug'), // `slug` property, that should have `string` type
-    Param::int('id'), // id `property`, that should have `int` type
-    Param::array('roles'), // `roles` property, that should have `array` type
-])
-
-```
-
-### <a name="custom-parameters"></a> Custom parameters
-
-It is common case that you may use `page` or some other param in different endpoint definitions. So it may be cumbersome to write something like that over and over again:
-
-```php
-
-$this->query([
-    Param::int('page')->example(1)->default(1)->optional()
-]);
-
-```    
-To solve that problem you may define `PageParam`, which you can reuse as many times as you want without repeated code:
-
-```php
-
-use App\Apidocs\Params\PageParam;
-
-(...)
-
-$this->query([
-    PageParam::class
-]);
-
-```
-
-### Creating custom parameters
-
-Custom parameters may be created by typing
-
-```php
-php artisan apidocs:param PageParam
-```
-
-New param class may be defined within `__construct` method:
-
-```php
-
-<?php
-
-namespace App\Apidocs\Params;
-
-use Johnylemon\Apidocs\Params\Param;
-
-class PageParam extends Param
-{
-    public function __construct()
-    {
-        $this->name('page')->type('int')->default(1)->eg(42)->optional();
-    }
-}
-
-
 ```
 
 ## <a name="groups"></a> Groups
 
-Apidocs endpoints will be groupped. If no group is specified, default `non-groupped` group will be used.
+Apidocs endpoints will be grouped. If no group is specified, default `non-groupped` group will be used.
 
-You can define your own groups using `Johnylemon\Apidocs\Facades\Apidocs` facade:
+You can define your own groups using `Pneves001\Apidocs\Facades\Apidocs` facade:
 
 ```php
-
-use Johnylemon\Apidocs\Facades\Apidocs;
+use Pneves001\Apidocs\Facades\Apidocs;
 
 Apidocs::defineGroup('users', 'Users', 'Manage users');
-Apidocs::defineGroup('tickets', 'Tickets'); // Last parameter is optional
-
 ```
 
-> **Groups must be defined before route registering.** Perfect place for that is the the very beginning of your routes file.
-
-
 ## Commands
-
-This package ships with some commands that will be used for common tasks:
 
 | command                   | description           |
 |---------------------------|-----------------------|
 | `apidocs:install`         | install package       |
+| `apidocs:generate`        | generate documentation|
 | `apidocs:endpoint {name}` | create endpoint class |
 | `apidocs:param {name}`    | create param class    |
 
@@ -573,26 +348,19 @@ This package ships with some commands that will be used for common tasks:
 ## Testing
 You can run the tests with:
 
-```
+```bash
 vendor/bin/phpunit
 ```
 
 ## License
 The MIT License (MIT)
-Please see [LICENSE](LICENSE.md) for details.
+Please see [LICENSE](LICENSE) for details.
 
 
 ## Contact
 
-Visit me at [https://johnylemon.dev](https://johnylemon.dev)
-
-## Next
-
-- improve examples
-- improve responses
-- improve resources
-- improve layout
+Visit me at [https://pneves001.dev](https://pneves001.dev)
 
 ---
 
-Developed with ❤ by [johnylemon](https://github.com/johnylemon).
+Developed with ❤ by [pneves001](https://github.com/pneves001).

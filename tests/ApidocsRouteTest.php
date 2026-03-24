@@ -1,13 +1,13 @@
 <?php
 
-namespace Johnylemon\Apidocs\Tests;
+namespace Pneves001\Apidocs\Tests;
 
-use Johnylemon\Apidocs\Facades\Apidocs;
-use Johnylemon\Apidocs\Facades\Param;
-use Johnylemon\Apidocs\Endpoints\Endpoint;
-use Johnylemon\Apidocs\Tests\Data\TestEndpoint;
-use Johnylemon\Apidocs\Exceptions\InvalidEndpoint;
-use Johnylemon\Apidocs\Exceptions\GroupNotFound;
+use Pneves001\Apidocs\Facades\Apidocs;
+use Pneves001\Apidocs\Facades\Param;
+use Pneves001\Apidocs\Endpoints\Endpoint;
+use Pneves001\Apidocs\Tests\Data\TestEndpoint;
+use Pneves001\Apidocs\Exceptions\InvalidEndpoint;
+use Pneves001\Apidocs\Exceptions\GroupNotFound;
 use Route;
 
 class ApidocsRouteTest extends TestCase

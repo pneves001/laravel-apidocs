@@ -17,10 +17,20 @@ export default new Vuex.Store({
         },
         currentUri: window.location.hash.replace('#', ''),
         try: {},
+        token: '',
     },
     getters: {
+        token (state) {
+            return state.token
+        },
         colormap (state) {
             return state.colormap
+        },
+        info (state) {
+            return state.apidocs.info
+        },
+        logo (state) {
+            return state.apidocs.logo
         },
         groups (state) {
             return state.apidocs.groups
@@ -36,6 +46,10 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+
+        setToken (state, payload) {
+            state.token = payload
+        },
 
         currentUri (state, payload) {
             state.currentUri = payload

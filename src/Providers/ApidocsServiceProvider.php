@@ -1,12 +1,12 @@
 <?php
 
-namespace Johnylemon\Apidocs\Providers;
+namespace Pneves001\Apidocs\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Routing\Route;
-use Johnylemon\Apidocs\Facades\Apidocs;
-use Johnylemon\Apidocs\Console\Commands\{
+use Pneves001\Apidocs\Facades\Apidocs;
+use Pneves001\Apidocs\Console\Commands\{
     GenerateApidocs,
     Install,
     MakeEndpoint,
@@ -31,9 +31,24 @@ class ApidocsServiceProvider extends ServiceProvider
         );
 
         //
-        // load routes
+        // define default routes
         //
-        $this->loadRoutesFrom(__DIR__.'/../../routes/apidocs.php');
+        \Illuminate\Support\Facades\Route::get(config('apidocs.uri'), function () {
+            return view('apidocs::app')->with([
+                'apidocs' => @file_get_contents(config('apidocs.file_path'))
+            ]);
+        })->name('apidocs.docs');
+
+        //
+        // define stack routes
+        //
+        foreach(config('apidocs.stacks', []) as $name => $stack) {
+            \Illuminate\Support\Facades\Route::get($stack['uri'], function () use ($stack) {
+                return view('apidocs::app')->with([
+                    'apidocs' => @file_get_contents($stack['file_path'])
+                ]);
+            })->name("apidocs.docs.{$name}");
+        }
 
         //
         // load views
@@ -65,15 +80,15 @@ class ApidocsServiceProvider extends ServiceProvider
         //
         // route macro
         //
-        Route::macro('apidocs', function($data = NULL){
-            return Apidocs::registerRoute($data, $this);
+        Route::macro('apidocs', function($data = NULL, string $stack = 'default'){
+            return Apidocs::stack($stack)->registerRoute($data, $this);
         });
 
         //
         // resource routes macro
         //
-        PendingResourceRegistration::macro('apidocs', function(array $data){
-            apidocs($data);
+        PendingResourceRegistration::macro('apidocs', function(array $data, string $stack = 'default'){
+            apidocs($data, $stack);
         });
 
         //

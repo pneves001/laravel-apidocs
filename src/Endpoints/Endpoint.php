@@ -1,13 +1,13 @@
 <?php
 
-namespace Johnylemon\Apidocs\Endpoints;
+namespace Pneves001\Apidocs\Endpoints;
 
-use Johnylemon\Apidocs\Facades\Apidocs;
-use Johnylemon\Apidocs\Traits\KeepsData;
-use Johnylemon\Apidocs\Facades\Explain;
-use Johnylemon\Apidocs\Params\Param;
-use Johnylemon\Apidocs\Exceptions\InvalidParamValue;
-use Johnylemon\Apidocs\Exceptions\GroupNotFound;
+use Pneves001\Apidocs\Facades\Apidocs;
+use Pneves001\Apidocs\Traits\KeepsData;
+use Pneves001\Apidocs\Facades\Explain;
+use Pneves001\Apidocs\Params\Param;
+use Pneves001\Apidocs\Exceptions\InvalidParamValue;
+use Pneves001\Apidocs\Exceptions\GroupNotFound;
 use Illuminate\Support\Str;
 use Error;
 
@@ -27,7 +27,7 @@ class Endpoint
     /**
      * Mounts endpoint within Apidocs container
      *
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function mount(): Endpoint
     {
@@ -41,7 +41,7 @@ class Endpoint
      * Sets endpoint method
      *
      * @param     string      $method    endpoint method
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function method(string $method): Endpoint
     {
@@ -52,7 +52,7 @@ class Endpoint
      * Sets endpoint uri
      *
      * @param     string      $uri    endpoint uri
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function uri(string $uri): Endpoint
     {
@@ -63,8 +63,8 @@ class Endpoint
     * Sets endpoint group
     *
     * @param     string      $slug    group slug
-    * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
-    * @throws    Johnylemon\Apidocs\Exceptions\GroupNotFound
+    * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
+    * @throws    Pneves001\Apidocs\Exceptions\GroupNotFound
     */
     public function group(string $slug): Endpoint
     {
@@ -78,7 +78,7 @@ class Endpoint
      * Sets endpoint group
      *
      * @param     boolean     $deprecated
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function deprecated(bool $deprecated = TRUE): Endpoint
     {
@@ -89,7 +89,7 @@ class Endpoint
      * Sets endpoint title
      *
      * @param     boolean     $title endoint title
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function title(string $title): Endpoint
     {
@@ -100,7 +100,7 @@ class Endpoint
      * Sets endpoint description
      *
      * @param     string     $description endoint description
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function description(string $description): Endpoint
     {
@@ -113,7 +113,7 @@ class Endpoint
      *
      * @see `description`
      * @param     string     $description endoint description
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function desc(string $description): Endpoint
     {
@@ -124,7 +124,7 @@ class Endpoint
      * Sets endpoint query params
      *
      * @param     boolean     $data  query params
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function query(array $data): Endpoint
     {
@@ -135,7 +135,7 @@ class Endpoint
      * Sets endpoint route params
      *
      * @param     boolean     $data  route params
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function params(array $data): Endpoint
     {
@@ -147,7 +147,7 @@ class Endpoint
      *
      * @param     array      $data  body params
      * @param     string     $format  body format
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function body(array $data, string $format = ''): Endpoint
     {
@@ -160,7 +160,7 @@ class Endpoint
      *
      * @param     string     $key    header name
      * @param     string     $value  header value
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function header(string $key, string $value): Endpoint
     {
@@ -171,7 +171,7 @@ class Endpoint
      * Sets endpoint headers
      *
      * @param     array     $data    endpoint headers
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function headers(array $data): Endpoint
     {
@@ -185,7 +185,7 @@ class Endpoint
      *
      * @param     mixed      $data     endpoint example
      * @param     string     $title    optional endpoint title
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function example($data, string $title = NULL): Endpoint
     {
@@ -199,7 +199,7 @@ class Endpoint
      * Sets endpoint examples
      *
      * @param     array      $data     endpoint examples
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function examples(array $data): Endpoint
     {
@@ -213,9 +213,9 @@ class Endpoint
      * Sets endpoint expected response
      *
      * @param     string     $code     response status code
-     * @param     mixed      $data     endpoint response
-     * @param     string     $data     optional response description
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint mutated endpoint
+     * @param     mixed      $response  endpoint response
+     * @param     string     $description     optional response description
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
     public function returns(string $code, $response, string $description = ''): Endpoint
     {
@@ -224,7 +224,7 @@ class Endpoint
             'description' => $description,
         ];
 
-        return $this->set("returns.$code", $data);
+        return $this->set("returns.$code", $data, TRUE);
     }
 
     /**
@@ -251,7 +251,7 @@ class Endpoint
      *
      * @param     mixed    $value
      * @return    array              param values
-     * @throws    Johnylemon\Apidocs\Exceptions\InvalidParamValue
+     * @throws    Pneves001\Apidocs\Exceptions\InvalidParamValue
      */
     protected function resolveValue($value): array
     {

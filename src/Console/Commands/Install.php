@@ -1,10 +1,10 @@
 <?php
 
-namespace Johnylemon\Apidocs\Console\Commands;
+namespace Pneves001\Apidocs\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Johnylemon\Apidocs\Providers\ApidocsServiceProvider;
+use Pneves001\Apidocs\Providers\ApidocsServiceProvider;
 
 class Install extends Command
 {

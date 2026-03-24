@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnylemon\Apidocs\Exceptions;
+namespace Pneves001\Apidocs\Exceptions;
 
 use Exception;
 

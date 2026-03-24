@@ -1,9 +1,9 @@
 <?php
 
-namespace Johnylemon\Apidocs\Console\Commands;
+namespace Pneves001\Apidocs\Console\Commands;
 
 use Illuminate\Console\Command;
-use Johnylemon\Apidocs\Facades\Apidocs;
+use Pneves001\Apidocs\Apidocs;
 
 class GenerateApidocs extends Command
 {
@@ -40,9 +40,19 @@ class GenerateApidocs extends Command
     {
         $this->callSilently('route:clear');
 
-        $data = Apidocs::export();
+        foreach (Apidocs::getStacks() as $name => $stack) {
+            $this->info("Generating docs for stack: {$name}");
 
-        file_put_contents(config('apidocs.file_path'), json_encode($data));
+            $stackConfig = config("apidocs.stacks.{$name}", []);
+            $filePath = $stackConfig['file_path'] ?? config('apidocs.file_path');
+            $markdownPath = $stackConfig['markdown_file_path'] ?? config('apidocs.markdown_file_path');
+
+            $data = $stack->export();
+            file_put_contents($filePath, json_encode($data));
+
+            $markdown = $stack->exportMarkdown();
+            file_put_contents($markdownPath, $markdown);
+        }
 
         $this->info('API docs generated');
     }

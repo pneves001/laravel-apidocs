@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnylemon\Apidocs\Facades;
+namespace Pneves001\Apidocs\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

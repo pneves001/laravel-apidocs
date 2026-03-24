@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnylemon\Apidocs\Console\Commands;
+namespace Pneves001\Apidocs\Console\Commands;
 
 class MakeEndpoint extends Make
 {

@@ -2,7 +2,7 @@
 
 namespace {{NAMESPACE}};
 
-use Johnylemon\Apidocs\Params\Param;
+use Pneves001\Apidocs\Params\Param;
 
 class {{NAME}} extends Param
 {

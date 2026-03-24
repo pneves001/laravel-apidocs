@@ -1,14 +1,27 @@
 <?php
 
-namespace Johnylemon\Apidocs;
+namespace Pneves001\Apidocs;
 
-use Johnylemon\Apidocs\Facades\Exporter;
-use Johnylemon\Apidocs\Endpoints\Endpoint;
-use Johnylemon\Apidocs\Exceptions\InvalidEndpoint;
+use Pneves001\Apidocs\Facades\Exporter;
+use Pneves001\Apidocs\MarkdownExporter;
+use Pneves001\Apidocs\Endpoints\Endpoint;
+use Pneves001\Apidocs\Exceptions\InvalidEndpoint;
 use Route;
 
 class Apidocs
 {
+    /**
+     * stack name
+     * @var    string
+     */
+    protected $name = 'default';
+
+    /**
+     * apidocs stacks
+     * @var    array
+     */
+    protected static $stacks = [];
+
     /**
      * registered endpoints
      * @var    array
@@ -16,10 +29,55 @@ class Apidocs
     protected $routes = [];
 
     /**
-     * defered endpoint definitions
-     * @var    array
+     * Get apidocs stack by its name
+     *
+     * @param     string    $name    stack name
+     * @return    Apidocs
      */
-    protected $defered = [];
+    public static function stack(string $name = 'default'): Apidocs
+    {
+        if($name == 'default' && !isset(static::$stacks['default']))
+        {
+            $instance = app(\Pneves001\Apidocs\Apidocs::class);
+            $instance->name = 'default';
+            static::$stacks['default'] = $instance;
+        }
+
+        if(!isset(static::$stacks[$name]))
+        {
+            $instance = new static;
+            $instance->name = $name;
+            static::$stacks[$name] = $instance;
+            
+            // Define default group for the new stack
+            $instance->defineGroup('non-groupped', 'Non-groupped', 'Non-grouped endpoints');
+        }
+
+        return static::$stacks[$name];
+    }
+
+    /**
+     * Get stack name
+     *
+     * @return    string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get all stacks
+     *
+     * @return    array
+     */
+    public static function getStacks(): array
+    {
+        if(!isset(static::$stacks['default']))
+            static::stack('default');
+
+        return static::$stacks;
+    }
 
     /**
      * registered groups
@@ -28,10 +86,16 @@ class Apidocs
     protected $groups = [];
 
     /**
+     * defered endpoint definitions
+     * @var    array
+     */
+    protected $defered = [];
+
+    /**
      * Register endpoint
      *
      * @param     mixed    $data    endpoint
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint endpoint
      */
     public function register($data): Endpoint
     {
@@ -47,7 +111,7 @@ class Apidocs
      *
      * @param     mixed    $data    endpoint
      * @param     mixed    $route   route
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint endpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint endpoint
      */
     public function registerRoute($data, $route): Endpoint
     {
@@ -62,8 +126,8 @@ class Apidocs
      * Build endpoint using provided data
      *
      * @param     mixed      $data    endpoint data
-     * @return    Johnylemon\Apidocs\Endpoints\Endpoint endpoint
-     * @throws    Johnylemon\Apidocs\Exceptions\InvalidEndpoint
+     * @return    Pneves001\Apidocs\Endpoints\Endpoint endpoint
+     * @throws    Pneves001\Apidocs\Exceptions\InvalidEndpoint
      */
     protected function buildEndpoint($data): Endpoint
     {
@@ -118,6 +182,18 @@ class Apidocs
         $this->compile();
 
         return Exporter::export($this);
+    }
+
+    /**
+     * Exports apidocs data as markdown
+     *
+     * @return    string
+     */
+    public function exportMarkdown(): string
+    {
+        $this->compile();
+
+        return (new MarkdownExporter)->export($this);
     }
 
     /**

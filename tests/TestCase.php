@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnylemon\Apidocs\Tests;
+namespace Pneves001\Apidocs\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -31,6 +31,6 @@ class TestCase extends BaseTestCase
 
     protected function getPackageProviders($app)
     {
-        return ['Johnylemon\\Apidocs\\Providers\ApidocsServiceProvider'];
+        return ['Pneves001\\Apidocs\\Providers\ApidocsServiceProvider'];
     }
 }

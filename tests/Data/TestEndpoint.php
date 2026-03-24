@@ -1,8 +1,8 @@
 <?php
 
-namespace Johnylemon\Apidocs\Tests\Data;
+namespace Pneves001\Apidocs\Tests\Data;
 
-use Johnylemon\Apidocs\Endpoints\Endpoint;
+use Pneves001\Apidocs\Endpoints\Endpoint;
 
 class TestEndpoint extends Endpoint
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Johnylemon\Apidocs\Tests;
+namespace Pneves001\Apidocs\Tests;
 
-use Johnylemon\Apidocs\Facades\Apidocs;
-use Johnylemon\Apidocs\Facades\Param;
-use Johnylemon\Apidocs\Endpoints\Endpoint;
-use Johnylemon\Apidocs\Tests\Data\TestEndpoint;
-use Johnylemon\Apidocs\Exceptions\InvalidEndpoint;
-use Johnylemon\Apidocs\Exceptions\GroupNotFound;
+use Pneves001\Apidocs\Facades\Apidocs;
+use Pneves001\Apidocs\Facades\Param;
+use Pneves001\Apidocs\Endpoints\Endpoint;
+use Pneves001\Apidocs\Tests\Data\TestEndpoint;
+use Pneves001\Apidocs\Exceptions\InvalidEndpoint;
+use Pneves001\Apidocs\Exceptions\GroupNotFound;
 
 class ParamsTest extends TestCase
 {
@@ -177,9 +177,9 @@ class ParamsTest extends TestCase
     /** @test */
     public function can_register_endpoint_group()
     {
-        Apidocs::defineGroup('johnylemon', "Apidocs");
-        $endpoint = Apidocs::register(TestEndpoint::class)->group("johnylemon");
-        $this->assertMethod($endpoint, 'group', 'johnylemon');
+        Apidocs::defineGroup('pneves001', "Apidocs");
+        $endpoint = Apidocs::register(TestEndpoint::class)->group("pneves001");
+        $this->assertMethod($endpoint, 'group', 'pneves001');
 
         $this->expectException(GroupNotFound::class);
         $endpoint = Apidocs::register(TestEndpoint::class)->group("apidocs");

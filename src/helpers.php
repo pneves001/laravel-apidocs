@@ -1,13 +1,14 @@
 <?php
 
-use Johnylemon\Apidocs\Facades\Apidocs;
+use Pneves001\Apidocs\Facades\Apidocs;
 
 /**
  * Define defered Apidocs definitions
  *
  * @param     array     $definitions
+ * @param     string    $stack
  */
-function apidocs(array $definitions)
+function apidocs(array $definitions, string $stack = 'default')
 {
-    Apidocs::defer($definitions);
+    \Pneves001\Apidocs\Apidocs::stack($stack)->defer($definitions);
 }

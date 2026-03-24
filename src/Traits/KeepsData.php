@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnylemon\Apidocs\Traits;
+namespace Pneves001\Apidocs\Traits;
 
 use Illuminate\Support\Arr;
 

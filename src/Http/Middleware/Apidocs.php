@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnylemon\Apidocs\Http\Middleware;
+namespace Pneves001\Apidocs\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

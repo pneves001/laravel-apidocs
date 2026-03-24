@@ -162,15 +162,18 @@ export default {
         },
         buildCurl() {
 
+            let headers = { ...this.fetch.headers }
+            if (this.$store.getters['token']) {
+                headers['Authorization'] = `Bearer ${this.$store.getters['token']}`
+            }
+
             let options = {
                 method: this.endpoint.method,
+                headers: headers
             }
 
             if(!isEmpty(this.fetch.body))
                 options['body'] = this.fetch.body
-
-            if(!isEmpty(this.fetch.headers))
-                options['headers'] = this.fetch.headers
 
             this.curl = this.formatLines(fetchToCurl(this.fullUrl(), options))
         },
@@ -184,11 +187,16 @@ export default {
         },
         tryIt() {
             this.response = null
+            
+            let headers = { ...this.fetch.headers }
+            if (this.$store.getters['token']) {
+                headers['Authorization'] = `Bearer ${this.$store.getters['token']}`
+            }
 
             axios({
                 method: this.endpoint.method,
                 url: this.fullUrl(),
-                headers: Object.assign(this.fetch.headers, {
+                headers: Object.assign(headers, {
                     [window.header_name]: 1,
                 }),
                 data: this.fetch.body

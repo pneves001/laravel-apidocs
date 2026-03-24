@@ -1,24 +1,32 @@
 <?php
 
-namespace Johnylemon\Apidocs;
+namespace Pneves001\Apidocs;
 
 class Exporter implements Export
 {
     /**
      * Export Apidocs data into an array
      *
-     * @param     Johnylemon\Apidocs\Apidocs    $apidocs    apidocs
+     * @param     Pneves001\Apidocs\Apidocs    $apidocs    apidocs
      * @return    array                                     apidocs data
      */
     public function export(Apidocs $apidocs): array
     {
+        $name = $apidocs->getName();
+        $stackConfig = config("apidocs.stacks.{$name}", []);
+        
+        $info = array_merge(config('apidocs.info', []), $stackConfig['info'] ?? []);
+        $logo = $stackConfig['logo'] ?? config('apidocs.logo');
+        $domain = $stackConfig['domain'] ?? config('apidocs.domain');
+
         $data = collect($apidocs->getRoutes())->map(function($item){
             return $item->data();
         })->all();
 
         return [
-            'info' => config('apidocs.info'),
-            'domain' => config('apidocs.domain'),
+            'info' => $info,
+            'logo' => $logo,
+            'domain' => $domain,
             'groups' => $apidocs->groups(),
             'endpoints' => $data,
         ];

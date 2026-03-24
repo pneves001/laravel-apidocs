@@ -1,8 +1,8 @@
 <?php
 
-namespace Johnylemon\Apidocs\Params;
+namespace Pneves001\Apidocs\Params;
 
-use Johnylemon\Apidocs\Traits\KeepsData;
+use Pneves001\Apidocs\Traits\KeepsData;
 
 class Param
 {
@@ -20,7 +20,7 @@ class Param
      * Set parameter type
      *
      * @param     string    $name    parameter name
-     * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+     * @return    Pneves001\Apidocs\Params\Param mutated parameter
      */
     public function type(string $name): Param
     {
@@ -31,7 +31,7 @@ class Param
      * Set parameter name (variable name)
      *
      * @param     string    $name    parameter name
-     * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+     * @return    Pneves001\Apidocs\Params\Param mutated parameter
      */
     public function name(string $name): Param
     {
@@ -42,7 +42,7 @@ class Param
      * Set parameter description
      *
      * @param     string    $description    parameter description
-     * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+     * @return    Pneves001\Apidocs\Params\Param mutated parameter
      */
     public function description(string $description): Param
     {
@@ -56,7 +56,7 @@ class Param
      *
      * @see `description`
      * @param     string    $description    parameter description
-     * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+     * @return    Pneves001\Apidocs\Params\Param mutated parameter
      */
     public function desc(string $description): Param
     {
@@ -67,7 +67,7 @@ class Param
      * Mark parameter as required
      *
      * @param     bool    $required
-     * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+     * @return    Pneves001\Apidocs\Params\Param mutated parameter
      */
     public function required(bool $required = TRUE): Param
     {
@@ -78,7 +78,7 @@ class Param
     * Mark parameter as optional
     *
     * @param     bool    $optional
-    * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+    * @return    Pneves001\Apidocs\Params\Param mutated parameter
     */
     public function optional(bool $optional = TRUE): Param
     {
@@ -90,7 +90,7 @@ class Param
     * Alias for `possible`
     *
     * @param     array    $enum possible values
-    * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+    * @return    Pneves001\Apidocs\Params\Param mutated parameter
     */
     public function enum(array $enum): Param
     {
@@ -102,7 +102,7 @@ class Param
     *
     * @see `enum`
     * @param     array    $possibilities possible values
-    * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+    * @return    Pneves001\Apidocs\Params\Param mutated parameter
     */
     public function possible(array $possiblities): Param
     {
@@ -113,7 +113,7 @@ class Param
      * Sets parameter default value
      *
      * @param     mixed    $default default value
-     * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+     * @return    Pneves001\Apidocs\Params\Param mutated parameter
      */
     public function default($default): Param
     {
@@ -124,7 +124,7 @@ class Param
     * Sets parameter example
     *
     * @param     mixed    $example parameter example value
-    * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+    * @return    Pneves001\Apidocs\Params\Param mutated parameter
     */
     public function example($example): Param
     {
@@ -137,7 +137,7 @@ class Param
     *
     * @see `example`
     * @param     mixed    $example parameter example value
-    * @return    Johnylemon\Apidocs\Params\Param mutated parameter
+    * @return    Pneves001\Apidocs\Params\Param mutated parameter
     */
     public function eg($example): Param
     {

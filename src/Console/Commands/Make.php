@@ -1,9 +1,9 @@
 <?php
 
-namespace Johnylemon\Apidocs\Console\Commands;
+namespace Pneves001\Apidocs\Console\Commands;
 
 use Illuminate\Console\Command;
-use Johnylemon\Apidocs\Providers\ApidocsServiceProvider;
+use Pneves001\Apidocs\Providers\ApidocsServiceProvider;
 
 abstract class Make extends Command
 {

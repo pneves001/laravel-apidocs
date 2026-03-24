@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnylemon\Apidocs\Facades;
+namespace Pneves001\Apidocs\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -13,6 +13,6 @@ class Apidocs extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return \Johnylemon\Apidocs\Apidocs::class;
+        return \Pneves001\Apidocs\Apidocs::class;
     }
 }
