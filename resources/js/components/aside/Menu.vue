@@ -18,6 +18,8 @@
             <input v-model="queryString" type="search" class="w-full block bg-purple-white shadow rounded border-0 p-1 px-3 outline-none" placeholder="Search">
         </div>
 
+        <div class="uppercase text-xs font-bold opacity-50 mb-4 mt-8">Table of Contents</div>
+
         <scrollactive active-class="active" :offset="80">
             <menu-group v-for="(group, slug) in groupped" :key="slug" :name="slug" :items="group"></menu-group>
 

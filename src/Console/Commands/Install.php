@@ -13,7 +13,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'apidocs:install';
+    protected $signature = 'apidocs:install {--force : Overwrite any existing files}';
 
     /**
      * The console command description.
@@ -41,12 +41,7 @@ class Install extends Command
     {
         $this->call('vendor:publish', [
             '--provider' => ApidocsServiceProvider::class,
-            '--force' => TRUE,
+            '--force' => $this->option('force'),
         ]);
-
-        app(Filesystem::class)->copyDirectory(
-           __DIR__.'/../../../publish/assets',
-           public_path('vendor/apidocs'),
-       );
     }
 }
