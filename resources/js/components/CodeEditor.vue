@@ -12,7 +12,6 @@
 import { debounce } from 'lodash'
 
 export default {
-    props: ['code', 'options'],
     props: {
         code: {
             type: [Array, Object, String],
@@ -29,10 +28,18 @@ export default {
             codeFormatted: ''
         }
     },
-    mounted() {
-        this.codeFormatted = this.raw ? this.code : JSON.stringify(this.code, null, 4)
+    watch: {
+        code: {
+            handler(value) {
+                this.formatCode(value)
+            },
+            immediate: true
+        }
     },
     methods: {
+        formatCode(value) {
+            this.codeFormatted = this.raw ? value : JSON.stringify(value, null, 4)
+        },
         onInput(value) {
             this.$emit('update', value)
         }

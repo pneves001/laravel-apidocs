@@ -35,8 +35,9 @@ class ApidocsServiceProvider extends ServiceProvider
         // define default routes
         //
         \Illuminate\Support\Facades\Route::get(config('apidocs.uri'), function () {
+            $apidocs = @file_get_contents(config('apidocs.file_path')) ?: '{"endpoints": []}';
             return view('apidocs::app')->with([
-                'apidocs' => @file_get_contents(config('apidocs.file_path'))
+                'apidocs' => $apidocs
             ]);
         })->name('apidocs.docs');
 
@@ -45,8 +46,9 @@ class ApidocsServiceProvider extends ServiceProvider
         //
         foreach(config('apidocs.stacks', []) as $name => $stack) {
             \Illuminate\Support\Facades\Route::get($stack['uri'], function () use ($stack) {
+                $apidocs = @file_get_contents($stack['file_path']) ?: '{"endpoints": []}';
                 return view('apidocs::app')->with([
-                    'apidocs' => @file_get_contents($stack['file_path'])
+                    'apidocs' => $apidocs
                 ]);
             })->name("apidocs.docs.{$name}");
         }

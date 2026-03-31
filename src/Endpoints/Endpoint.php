@@ -191,7 +191,7 @@ class Endpoint
     {
         return $this->set('examples', [
             'title' => $title,
-            'data' => (array)$data,
+            'data' => $this->normalizeData($data),
         ], TRUE);
     }
 
@@ -220,11 +220,39 @@ class Endpoint
     public function returns(string $code, $response, string $description = ''): Endpoint
     {
         $data = [
-            'response' => (array)$response,
+            'response' => $this->normalizeData($response),
             'description' => $description,
         ];
 
         return $this->set("returns.$code", $data, TRUE);
+    }
+
+    /**
+     * Normalize data for export
+     *
+     * @param     mixed    $data
+     * @return    array
+     */
+    protected function normalizeData($data): array
+    {
+        if (is_string($data)) {
+            $json = json_decode($data, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $json;
+            }
+        }
+
+        if (is_object($data)) {
+            if (method_exists($data, 'toArray')) {
+                return $data->toArray();
+            }
+
+            if ($data instanceof \JsonSerializable) {
+                return $data->jsonSerialize();
+            }
+        }
+
+        return (array)$data;
     }
 
     /**
