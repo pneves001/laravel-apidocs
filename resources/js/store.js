@@ -27,25 +27,25 @@ export default new Vuex.Store({
             return state.colormap
         },
         info (state) {
-            return state.apidocs.info
+            return state.apidocs ? (state.apidocs.info || {}) : {}
         },
         logo (state) {
-            return state.apidocs.logo
+            return state.apidocs ? state.apidocs.logo : null
         },
         groups (state) {
-            return state.apidocs.groups
+            return state.apidocs ? (state.apidocs.groups || {}) : {}
         },
         currentUri (state) {
             return state.currentUri
         },
         endpoints (state) {
-            return state.apidocs.endpoints
+            return state.apidocs ? (state.apidocs.endpoints || []) : []
         },
         webhooks (state) {
-            return state.apidocs.webhooks || []
+            return (state.apidocs && state.apidocs.webhooks) ? state.apidocs.webhooks : []
         },
         groupEndpoints: (state) => (name) => {
-            return filter(state.apidocs.endpoints, (item) => { return item.group == name })
+            return filter(state.apidocs ? (state.apidocs.endpoints || []) : [], (item) => { return item.group == name })
         }
     },
     mutations: {
