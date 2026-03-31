@@ -16,7 +16,7 @@ export default {
     },
     computed: {
         group() {
-            return this.$store.getters['groups'][this.name]
+            return this.$store.getters['groups']?.[this.name]
         },
         // endpoints() {
         //     return this.$store.getters['groupEndpoints'](this.name)

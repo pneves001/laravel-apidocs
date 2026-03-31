@@ -27,11 +27,36 @@ class Exporter implements Export
             return $item->data();
         })->all();
 
+        $groups = $apidocs->groups();
+
+        // Data-Level Fix: Ensure all group slugs used by endpoints exist in the groups array.
+        // This prevents the "Cannot read properties of undefined (reading 'name')" error 
+        // in older, uncompiled versions of the frontend.
+        foreach ($data as $endpoint) {
+            $slug = $endpoint['group'] ?? 'non-groupped';
+            if (!isset($groups[$slug])) {
+                $groups[$slug] = [
+                    'name' => ucfirst(str_replace(['-', '_'], ' ', $slug)),
+                    'description' => ''
+                ];
+            }
+        }
+        
+        foreach ($webhooks as $webhook) {
+            $slug = $webhook['group'] ?? 'non-groupped';
+            if (!isset($groups[$slug])) {
+                $groups[$slug] = [
+                    'name' => ucfirst(str_replace(['-', '_'], ' ', $slug)),
+                    'description' => ''
+                ];
+            }
+        }
+
         return [
             'info' => $info,
             'logo' => $logo,
             'domain' => $domain,
-            'groups' => $apidocs->groups(),
+            'groups' => $groups,
             'endpoints' => $data,
             'webhooks' => $webhooks,
         ];
