@@ -20,6 +20,9 @@
 
         <scrollactive active-class="active" :offset="80">
             <menu-group v-for="(group, slug) in groupped" :key="slug" :name="slug" :items="group"></menu-group>
+
+            <div v-if="size(webhooks)" class="uppercase text-xs font-bold opacity-50 mb-4 mt-8">Webhooks</div>
+            <menu-group v-for="(group, slug) in grouppedWebhooks" :key="'webhook-' + slug" :name="slug" :items="group"></menu-group>
         </scrollactive>
 
     </div>
@@ -29,7 +32,7 @@
 <script>
 
 import MenuGroup from '@/aside/menu/Group'
-import { groupBy, filter } from 'lodash'
+import { groupBy, filter, size } from 'lodash'
 
 export default {
     props: [],
@@ -57,7 +60,10 @@ export default {
             return this.$store.getters['logo']
         },
         endpoints() {
-...
+            return this.$store.getters['endpoints']
+        },
+        webhooks() {
+            return this.$store.getters['webhooks']
         },
         query() {
             return this.queryString.toLowerCase()
@@ -70,6 +76,19 @@ export default {
         groupped() {
             return groupBy(this.filtered, 'group')
         },
+        filteredWebhooks() {
+            return filter(this.webhooks, (webhook) => {
+                return webhook.title.toLowerCase().includes(this.query)
+            })
+        },
+        grouppedWebhooks() {
+            return groupBy(this.filteredWebhooks, 'group')
+        }
+    },
+    methods: {
+        size(value) {
+            return size(value)
+        }
     }
 }
 

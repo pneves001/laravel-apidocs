@@ -1,0 +1,17 @@
+<?php
+
+namespace {{NAMESPACE}};
+
+use Pneves001\Apidocs\Endpoints\Webhook;
+
+class {{NAME}} extends Webhook
+{
+    /**
+     * Describe webhook
+     *
+     */
+    public function describe(): void
+    {
+        //
+    }
+}

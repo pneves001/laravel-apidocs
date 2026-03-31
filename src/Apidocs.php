@@ -5,6 +5,7 @@ namespace Pneves001\Apidocs;
 use Pneves001\Apidocs\Facades\Exporter;
 use Pneves001\Apidocs\MarkdownExporter;
 use Pneves001\Apidocs\Endpoints\Endpoint;
+use Pneves001\Apidocs\Endpoints\Webhook;
 use Pneves001\Apidocs\Exceptions\InvalidEndpoint;
 use Route;
 
@@ -27,6 +28,12 @@ class Apidocs
      * @var    array
      */
     protected $routes = [];
+
+    /**
+     * registered webhooks
+     * @var    array
+     */
+    protected $webhooks = [];
 
     /**
      * Get apidocs stack by its name
@@ -107,6 +114,21 @@ class Apidocs
     }
 
     /**
+     * Register webhook
+     *
+     * @param     mixed    $data    webhook
+     * @return    Pneves001\Apidocs\Endpoints\Webhook webhook
+     */
+    public function registerWebhook($data): Webhook
+    {
+        $webhook = static::buildWebhook($data);
+
+        $this->webhooks[] = $webhook;
+
+        return $webhook;
+    }
+
+    /**
      * Register endpoint
      *
      * @param     mixed    $data    endpoint
@@ -138,6 +160,27 @@ class Apidocs
             return app($data);
 
         if($data instanceof Endpoint)
+            return $data;
+
+        throw new InvalidEndpoint;
+    }
+
+    /**
+     * Build webhook using provided data
+     *
+     * @param     mixed      $data    webhook data
+     * @return    Pneves001\Apidocs\Endpoints\Webhook webhook
+     * @throws    Pneves001\Apidocs\Exceptions\InvalidEndpoint
+     */
+    protected function buildWebhook($data): Webhook
+    {
+        if(!$data)
+            return app(Webhook::class);
+
+        if(is_string($data) && class_exists($data))
+            return app($data);
+
+        if($data instanceof Webhook)
             return $data;
 
         throw new InvalidEndpoint;
@@ -207,13 +250,23 @@ class Apidocs
     }
 
     /**
+     * Returns all registered webhooks
+     *
+     * @return    array    registered webhooks
+     */
+    public function getWebhooks(): array
+    {
+        return $this->webhooks;
+    }
+
+    /**
      * Define group of endpoints
      *
      * @param     string    $slug           group friendly name
      * @param     string    $name           group name
      * @param     string    $description    group description
      */
-    public function defineGroup(string $slug, string $name, string $description = NULL)
+    public function defineGroup(string $slug, string $name, ?string $description = NULL)
     {
         $this->groups[$slug] = [
             'name' => $name,

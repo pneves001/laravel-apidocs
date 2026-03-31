@@ -10,6 +10,7 @@ use Pneves001\Apidocs\Console\Commands\{
     GenerateApidocs,
     Install,
     MakeEndpoint,
+    MakeWebhook,
     MakeParam
 };
 use Illuminate\Routing\PendingResourceRegistration;
@@ -100,6 +101,7 @@ class ApidocsServiceProvider extends ServiceProvider
                 Install::class,
                 GenerateApidocs::class,
                 MakeEndpoint::class,
+                MakeWebhook::class,
                 MakeParam::class,
             ]);
         }

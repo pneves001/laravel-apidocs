@@ -41,6 +41,9 @@ export default new Vuex.Store({
         endpoints (state) {
             return state.apidocs.endpoints
         },
+        webhooks (state) {
+            return state.apidocs.webhooks || []
+        },
         groupEndpoints: (state) => (name) => {
             return filter(state.apidocs.endpoints, (item) => { return item.group == name })
         }

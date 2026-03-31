@@ -14,6 +14,7 @@ class MarkdownExporter
 
         $groups = $apidocs->groups();
         $endpoints = collect($apidocs->getRoutes())->map(fn($e) => $e->data());
+        $webhooks = collect($apidocs->getWebhooks())->map(fn($e) => $e->data());
 
         $md = "# {$info['title']} (v{$info['version']})\n\n";
         $md .= "{$info['description']}\n\n";
@@ -26,64 +27,81 @@ class MarkdownExporter
             }
 
             $groupEndpoints = $endpoints->where('group', $slug);
+            $groupWebhooks = $webhooks->where('group', $slug);
 
-            foreach ($groupEndpoints as $endpoint) {
-                $md .= "### {$endpoint['title']}\n\n";
-                if ($endpoint['description'] ?? null) {
-                    $md .= "{$endpoint['description']}\n\n";
+            if ($groupEndpoints->isNotEmpty()) {
+                foreach ($groupEndpoints as $endpoint) {
+                    $md .= $this->formatResource($endpoint);
                 }
-                $md .= "**Method:** `{$endpoint['method']}`\n\n";
-                $md .= "**URI:** `{$endpoint['uri']}`\n\n";
+            }
 
-                if ($params = $endpoint['params'] ?? null) {
-                    $md .= "#### Route Parameters\n\n";
-                    $md .= $this->formatParams($params);
+            if ($groupWebhooks->isNotEmpty()) {
+                $md .= "### Webhooks\n\n";
+                foreach ($groupWebhooks as $webhook) {
+                    $md .= $this->formatResource($webhook);
                 }
-
-                if ($query = $endpoint['query'] ?? null) {
-                    $md .= "#### Query Parameters\n\n";
-                    $md .= $this->formatParams($query);
-                }
-
-                if ($body = $endpoint['body']['data'] ?? null) {
-                    $md .= "#### Body Parameters (" . ($endpoint['body']['format'] ?: 'JSON') . ")\n\n";
-                    $md .= $this->formatParams($body);
-                }
-
-                if ($headers = $endpoint['headers'] ?? null) {
-                    $md .= "#### Headers\n\n";
-                    foreach ($headers as $key => $value) {
-                        $md .= "- `{$key}`: `{$value}`\n";
-                    }
-                    $md .= "\n";
-                }
-
-                if ($examples = $endpoint['examples'] ?? null) {
-                    $md .= "#### Examples\n\n";
-                    foreach ($examples as $example) {
-                        if ($example['title']) {
-                            $md .= "_{$example['title']}_\n";
-                        }
-                        $md .= "```json\n" . json_encode($example['data'], JSON_PRETTY_PRINT) . "\n```\n\n";
-                    }
-                }
-
-                if ($returns = $endpoint['returns'] ?? null) {
-                    $md .= "#### Responses\n\n";
-                    foreach ($returns as $code => $responses) {
-                        foreach ($responses as $response) {
-                            $md .= "**Status Code:** `{$code}`\n";
-                            if ($response['description']) {
-                                $md .= "_{$response['description']}_\n";
-                            }
-                            $md .= "```json\n" . json_encode($response['response'], JSON_PRETTY_PRINT) . "\n```\n\n";
-                        }
-                    }
-                }
-
-                $md .= "---\n\n";
             }
         }
+
+        return $md;
+    }
+
+    protected function formatResource(array $endpoint): string
+    {
+        $md = "### {$endpoint['title']}\n\n";
+        if ($endpoint['description'] ?? null) {
+            $md .= "{$endpoint['description']}\n\n";
+        }
+        $md .= "**Method:** `{$endpoint['method']}`\n\n";
+        $md .= "**URI:** `{$endpoint['uri']}`\n\n";
+
+        if ($params = $endpoint['params'] ?? null) {
+            $md .= "#### Route Parameters\n\n";
+            $md .= $this->formatParams($params);
+        }
+
+        if ($query = $endpoint['query'] ?? null) {
+            $md .= "#### Query Parameters\n\n";
+            $md .= $this->formatParams($query);
+        }
+
+        if ($body = $endpoint['body']['data'] ?? null) {
+            $md .= "#### Body Parameters (" . ($endpoint['body']['format'] ?: 'JSON') . ")\n\n";
+            $md .= $this->formatParams($body);
+        }
+
+        if ($headers = $endpoint['headers'] ?? null) {
+            $md .= "#### Headers\n\n";
+            foreach ($headers as $key => $value) {
+                $md .= "- `{$key}`: `{$value}`\n";
+            }
+            $md .= "\n";
+        }
+
+        if ($examples = $endpoint['examples'] ?? null) {
+            $md .= "#### Examples\n\n";
+            foreach ($examples as $example) {
+                if ($example['title']) {
+                    $md .= "_{$example['title']}_\n";
+                }
+                $md .= "```json\n" . json_encode($example['data'], JSON_PRETTY_PRINT) . "\n```\n\n";
+            }
+        }
+
+        if ($returns = $endpoint['returns'] ?? null) {
+            $md .= "#### Responses\n\n";
+            foreach ($returns as $code => $responses) {
+                foreach ($responses as $response) {
+                    $md .= "**Status Code:** `{$code}`\n";
+                    if ($response['description']) {
+                        $md .= "_{$response['description']}_\n";
+                    }
+                    $md .= "```json\n" . json_encode($response['response'], JSON_PRETTY_PRINT) . "\n```\n\n";
+                }
+            }
+        }
+
+        $md .= "---\n\n";
 
         return $md;
     }

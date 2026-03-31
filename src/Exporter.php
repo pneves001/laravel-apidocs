@@ -23,12 +23,17 @@ class Exporter implements Export
             return $item->data();
         })->all();
 
+        $webhooks = collect($apidocs->getWebhooks())->map(function($item){
+            return $item->data();
+        })->all();
+
         return [
             'info' => $info,
             'logo' => $logo,
             'domain' => $domain,
             'groups' => $apidocs->groups(),
             'endpoints' => $data,
+            'webhooks' => $webhooks,
         ];
     }
 }

@@ -22,9 +22,9 @@
             <responses v-if="size(responses)" :items="responses" />
         </div>
 
-        <playground :endpoint="endpoint" />
+        <playground v-if="!endpoint.is_webhook" :endpoint="endpoint" />
         
-        <snippets :endpoint="endpoint" />
+        <snippets v-if="!endpoint.is_webhook" :endpoint="endpoint" />
     </div>
 
 </template>

@@ -17,6 +17,7 @@ This package adds `apidocs` method to [Laravel](https://github.com/laravel/larav
 **This way you can:**
  - Create professional, interactive API documentation.
  - **Multiple API Stacks**: Separate Public, Internal, and POS APIs easily.
+ - **Webhooks Support**: Document callbacks and external system integrations.
  - **Global Authorization**: Set a token once for the entire session.
  - **Code Snippets**: Instant cURL and JavaScript snippets for every endpoint.
  - **Parameter Tables**: Clear, structured documentation of all request parameters.
@@ -73,6 +74,39 @@ class SampleEndpoint extends Endpoint
 }
 ```
 
+## Generating webhook documentation
+
+Webhooks are callbacks that your system sends to an external system. Since they don't have a local route endpoint, they have their own generation command.
+
+```bash
+php artisan apidocs:webhook UserCreatedWebhook
+```
+
+This will create a `UserCreatedWebhook` class in your `app\Apidocs\Endpoints` directory. It works exactly like a standard `Endpoint` class, but it's clearly marked as a webhook in the UI and markdown exports.
+
+```php
+<?php
+
+namespace App\Apidocs\Endpoints;
+
+use Pneves001\Apidocs\Endpoints\Webhook;
+use Pneves001\Apidocs\Facades\Param;
+
+class UserCreatedWebhook extends Webhook
+{
+    public function describe(): void
+    {
+        $this->title('User Created Callback')
+            ->desc('This webhook is sent to your server when a new user is created.')
+            ->method('POST')
+            ->body([
+                'user_id' => Param::int()->required(),
+                'email' => Param::string()->required(),
+            ]);
+    }
+}
+```
+
 ## Advanced Features
 
 ### Multiple API Stacks
@@ -97,6 +131,23 @@ You can generate separate documentation for different parts of your system (e.g.
 Route::get('/api/internal/users', 'InternalUserController@index')
      ->apidocs(InternalUserDoc::class, 'internal');
 ```
+
+### Webhooks
+Since webhooks are not attached to an application route, you can register them globally or in your routes file (e.g., `routes/apidocs.php`).
+
+**1. Registration** using the helper function:
+```php
+apidocs_webhook(UserCreatedWebhook::class);
+```
+
+**2. Stack-Specific Webhooks**:
+If you're using multiple stacks, you can pass the stack name as the second argument:
+```php
+apidocs_webhook(UserCreatedWebhook::class, 'internal');
+```
+
+**3. UI Display**:
+Webhooks appear in a dedicated section in the sidebar and main view. To maintain documentation clarity, the "Try It" playground and code snippets are automatically disabled for webhooks, as they represent incoming requests to your customers' servers.
 
 ### Global Authorization
 In the documentation UI, you'll find a **Bearer Token** input in the sidebar. Setting this once will:
@@ -342,6 +393,7 @@ Apidocs::defineGroup('users', 'Users', 'Manage users');
 | `apidocs:install`         | install package       |
 | `apidocs:generate`        | generate documentation|
 | `apidocs:endpoint {name}` | create endpoint class |
+| `apidocs:webhook {name}`  | create webhook class  |
 | `apidocs:param {name}`    | create param class    |
 
 
