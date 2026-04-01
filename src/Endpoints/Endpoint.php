@@ -315,7 +315,7 @@ class Endpoint
 
     public function __call($name, $args)
     {
-        if((string)$code = Str::of($name)->match('/^returns([0-9]{3})$/'))
+        if((string)$code = Str::of($name)->match('/^returns(.*)$/'))
         {
             return $this->returns($code, ...$args);
         }
