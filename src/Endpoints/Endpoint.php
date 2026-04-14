@@ -31,6 +31,10 @@ class Endpoint
      */
     public function mount(): Endpoint
     {
+        if ($this->get('id')) {
+            return $this;
+        }
+
         $this->describe();
         $this->set('id', "item-".Str::uuid());
 
@@ -315,7 +319,7 @@ class Endpoint
 
     public function __call($name, $args)
     {
-        if((string)$code = Str::of($name)->match('/^returns(.*)$/'))
+        if((string)$code = Str::of($name)->match('/^returns(\d+)$/'))
         {
             return $this->returns($code, ...$args);
         }

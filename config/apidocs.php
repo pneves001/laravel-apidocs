@@ -12,8 +12,8 @@ return [
     */
     'info' => [
         'version' => '1.0',
-        'title' => 'Laravel API documentation',
-        'description' => 'Laravel API documentation',
+        'title' => env('APP_NAME', 'Laravel API documentation'),
+        'description' => 'API documentation',
     ],
 
     /*

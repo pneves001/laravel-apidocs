@@ -254,10 +254,12 @@ class ApidocsTest extends TestCase
 
         $this->assertMethod($endpoint, 'returns', [
             200 => [
-                'response' => [
-                    'status' => 'OK',
-                ],
-                'description' => 'desc'
+                [
+                    'response' => [
+                        'status' => 'OK',
+                    ],
+                    'description' => 'desc'
+                ]
             ]
         ]);
     }
@@ -271,10 +273,12 @@ class ApidocsTest extends TestCase
 
         $this->assertMethod($endpoint, 'returns', [
             201 => [
-                'response' => [
-                    'status' => 'OK',
-                ],
-                'description' => 'desc'
+                [
+                    'response' => [
+                        'status' => 'OK',
+                    ],
+                    'description' => 'desc'
+                ]
             ]
         ]);
     }

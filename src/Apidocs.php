@@ -80,6 +80,10 @@ class Apidocs
      */
     public static function getStacks(): array
     {
+        foreach (config('apidocs.stacks', []) as $name => $stack) {
+            static::stack($name);
+        }
+
         if(!isset(static::$stacks['default']))
             static::stack('default');
 
@@ -195,6 +199,18 @@ class Apidocs
         if($this->getDefered())
         {
             $this->describeDefered();
+        }
+
+        foreach ($this->routes as $route) {
+            if (!$route->get('id')) {
+                $route->mount();
+            }
+        }
+
+        foreach ($this->webhooks as $webhook) {
+            if (!$webhook->get('id')) {
+                $webhook->mount();
+            }
         }
     }
 
