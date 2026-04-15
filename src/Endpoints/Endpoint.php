@@ -319,11 +319,10 @@ class Endpoint
 
     public function __call($name, $args)
     {
-        if((string)$code = Str::of($name))
-        {
-            return $this->returns($code, ...$args);
+	if (!empty(name)) {
+   		 return $this->returns($name, ...$args);
         }
 
-        throw new Error('Call to undefined method '.__CLASS__.'::'.$name.'()');
+    throw new Error('Call to undefined method '.__CLASS__.'::'.$name.'()');
     }
 }
