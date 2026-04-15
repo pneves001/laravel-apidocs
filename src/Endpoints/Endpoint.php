@@ -319,7 +319,7 @@ class Endpoint
 
     public function __call($name, $args)
     {
-        if((string)$code = Str::of($name)->match('/^returns(\d+)$/'))
+        if((string)$code = Str::of($name))
         {
             return $this->returns($code, ...$args);
         }
