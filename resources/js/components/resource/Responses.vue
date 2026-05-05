@@ -9,7 +9,7 @@
                     class="tab"
                     :class="{'current': index == current}"
                     @click="select(index)" >
-                    {{ index }}
+                    {{ item.description || index }}
                 </div>
             </vue-custom-scrollbar>
 
@@ -28,9 +28,10 @@
 
 </template>
 
-<style lang="sass">
-    .tabs
-        padding-left: 1rem
+<style>
+    .tabs {
+        padding-left: 1rem;
+    }
 </style>
 
 <script>

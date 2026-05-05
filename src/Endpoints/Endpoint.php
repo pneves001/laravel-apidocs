@@ -224,7 +224,8 @@ class Endpoint
             'description' => $description,
         ];
 
-        return $this->set("returns.$code", $data);
+        $key = !empty($description) ? $description : $code;
+        return $this->set("returns.$key", $data);
     }
 
     /**

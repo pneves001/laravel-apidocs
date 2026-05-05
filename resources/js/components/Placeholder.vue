@@ -6,14 +6,15 @@
 
 </template>
 
-<style lang="sass" scoped>
+<style scoped>
 
-    .placeholder
-        background: rgba(0,0,0,0.1)
-        min-height: 100px
-        display: flex
-        align-items: center
-        justify-content: center
+    .placeholder {
+        background: rgba(0,0,0,0.1);
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
 </style>
 
