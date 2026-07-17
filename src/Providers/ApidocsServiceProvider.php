@@ -15,8 +15,7 @@ use Pneves001\Apidocs\Console\Commands\{
 };
 use Illuminate\Routing\PendingResourceRegistration;
 
-use Storage;
-use DB; 
+
 
 class ApidocsServiceProvider extends ServiceProvider
 {
@@ -35,18 +34,7 @@ class ApidocsServiceProvider extends ServiceProvider
         );
 
 
-        // 2. Add the safety patch
-        // We check if we are running in the console (to avoid overhead in web requests)
-        // and ensure we don't overwrite if they somehow already exist.
-        if ($this->app->runningInConsole()) {
-            if (!method_exists(DB::class, 'getTable')) {
-                DB::macro('getTable', fn() => null);
-            }
-            if (!method_exists(Storage::class, 'getTable')) {
-                Storage::macro('getTable', fn() => null);
-            }
-        }
-
+  
         //
         // define default routes
         //

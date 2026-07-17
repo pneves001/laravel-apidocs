@@ -38,6 +38,11 @@ class GenerateApidocs extends Command
      */
     public function handle()
     {
+            // Apply the safety macros here, right before you start generating.
+        // This ensures they are only active during this specific command execution.
+        \Illuminate\Support\Facades\DB::macro('getTable', fn() => null);
+        \Illuminate\Support\Facades\Storage::macro('getTable', fn() => null);
+
         $this->callSilently('route:clear');
 
         foreach (Apidocs::getStacks() as $name => $stack) {
