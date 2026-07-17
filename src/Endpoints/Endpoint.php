@@ -241,6 +241,11 @@ class Endpoint
      */
     protected function normalizeData($data): array
     {
+        // Add this to the top of normalizeData
+        if (isset($data['type']) && $data['type'] === 'class') {
+             return $data; // Keep the reflection metadata intact
+        }
+
         if (is_string($data)) {
             $json = json_decode($data, true);
             if (json_last_error() === JSON_ERROR_NONE) {
