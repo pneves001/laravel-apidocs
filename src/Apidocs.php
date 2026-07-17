@@ -156,20 +156,47 @@ class Apidocs
      * @throws    Pneves001\Apidocs\Exceptions\InvalidEndpoint
      */
     protected function buildEndpoint($data): Endpoint
-    {
-        if(!$data)
-            return app(Endpoint::class);
+        {
+            if (!$data) return app(Endpoint::class);
 
-        // ONLY resolve from the app container if it's explicitly intended to be an Endpoint
-        if(is_string($data) && class_exists($data) && is_subclass_of($data, Endpoint::class)) {
-            return app($data);
+            // 1. Strict Type Guard: Only instantiate if it's actually an Endpoint class
+            if (is_string($data) && class_exists($data)) {
+                if (is_subclass_of($data, Endpoint::class)) {
+                    return app($data);
+                }
+                
+                // 2. New Laravel 13 way: If it's a model, don't instantiate it.
+                // Use reflection to get info instead.
+                if (is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)) {
+                    return $this->reflectModelInfo($data);
+                }
+            }
+
+            if ($data instanceof Endpoint) return $data;
+
+            throw new InvalidEndpoint;
         }
 
-        if($data instanceof Endpoint)
-            return $data;
+    protected function reflectModelInfo(string $className): Endpoint
+            {
+                $reflection = new \ReflectionClass($className);
+                
+                // Check for Laravel 13 #[Table] Attribute
+                $attributes = $reflection->getAttributes('Illuminate\Database\Eloquent\Attributes\Table');
+                
+                if (count($attributes) > 0) {
+                    $table = $attributes[0]->newInstance()->name;
+                } else {
+                    // Fallback: If no attribute, check for static property (Standard Laravel)
+                    $table = $reflection->hasProperty('table') 
+                        ? $reflection->getProperty('table')->getValue(new $className) 
+                        : \Illuminate\Support\Str::snake(\Illuminate\Support\Str::pluralStudly($reflection->getShortName()));
+                }
+                
+                // Return a dummy endpoint or metadata object instead of a live instance
+                return (new Endpoint())->setTable($table);
+            }
 
-        throw new InvalidEndpoint("The provided data must be an instance of Endpoint or a class extending it.");
-    }
     /**
      * Build webhook using provided data
      *
