@@ -36,7 +36,7 @@ class Endpoint
         }
 
         $this->describe();
-        $this->set('id', "item-".Str::uuid());
+        $this->set('id', "item-". Str::uuid());
 
         return $this;
     }
@@ -287,14 +287,32 @@ class Endpoint
      */
     protected function resolveValue($value): array
     {
-        if(is_array($value))
+        if (is_array($value)) {
             return $value;
+        }
 
-        if(is_string($value) && class_exists($value))
-            $value = app($value);
+        // Check if it's a class string and exists
+        if (is_string($value) && class_exists($value)) {
+            try {
+                // We use app()->make() instead of just app() to be explicit
+                $value = app()->make($value);
+            } catch (\Throwable $e) {
+                // LOG THE ERROR: This will tell you exactly which class is failing
+                // and why (e.g., "Call to undefined method ReflectionUnionType::getName()")
+                \Log::error("Apidocs failed to resolve class [$value]: " . $e->getMessage());
 
-        if($value instanceof Param)
+                // Return a fallback so the documentation generation continues 
+                // instead of crashing the entire CLI process.
+                return [
+                    'name' => class_basename($value),
+                    'error' => 'Unable to resolve class (likely due to incompatible type hints)'
+                ];
+            }
+        }
+
+        if ($value instanceof Param) {
             return $value->data();
+        }
 
         throw new InvalidParamValue;
     }
@@ -319,7 +337,7 @@ class Endpoint
 
     public function __call($name, $args)
     {
-	if (!empty(name)) {
+	if (!empty($name)) {
    		 return $this->returns($name, ...$args);
         }
 
