@@ -9,11 +9,7 @@
                     class="tab"
                     :class="{'current': index == current}"
                     @click="select(index)" >
-<<<<<<< HEAD
                     {{ item.code }} <span v-if="item.description" class="text-xs ml-1 opacity-50">({{ item.description }})</span>
-=======
-                    {{ item.description || index }}
->>>>>>> feature/response-descriptions
                 </div>
             </vue-custom-scrollbar>
 
