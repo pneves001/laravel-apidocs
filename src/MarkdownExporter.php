@@ -87,16 +87,26 @@ class MarkdownExporter
                 $md .= "```json\n" . json_encode($example['data'], JSON_PRETTY_PRINT) . "\n```\n\n";
             }
         }
-
         if ($returns = $endpoint['returns'] ?? null) {
             $md .= "#### Responses\n\n";
             foreach ($returns as $code => $responses) {
-                foreach ($responses as $response) {
+                // Determine if $responses is a single response or a list of responses
+                // If the first key is numeric, treat as a list; otherwise, wrap it.
+                $responseList = (isset($responses[0]) && is_array($responses[0])) 
+                                ? $responses 
+                                : [$responses];
+
+                foreach ($responseList as $response) {
                     $md .= "**Status Code:** `{$code}`\n";
-                    if ($response['description']) {
-                        $md .= "_{$response['description']}_\n";
+                    
+                    // Add a safety check for description key existence
+                    $desc = $response['description'] ?? '';
+                    if (!empty($desc)) {
+                        $md .= "_{$desc}_\n";
                     }
-                    $md .= "```json\n" . json_encode($response['response'], JSON_PRETTY_PRINT) . "\n```\n\n";
+                    
+                    $data = $response['response'] ?? $response;
+                    $md .= "```json\n" . json_encode($data, JSON_PRETTY_PRINT) . "\n```\n\n";
                 }
             }
         }
