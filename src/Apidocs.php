@@ -160,15 +160,16 @@ class Apidocs
         if(!$data)
             return app(Endpoint::class);
 
-        if(is_string($data) && class_exists($data))
+        // ONLY resolve from the app container if it's explicitly intended to be an Endpoint
+        if(is_string($data) && class_exists($data) && is_subclass_of($data, Endpoint::class)) {
             return app($data);
+        }
 
         if($data instanceof Endpoint)
             return $data;
 
-        throw new InvalidEndpoint;
+        throw new InvalidEndpoint("The provided data must be an instance of Endpoint or a class extending it.");
     }
-
     /**
      * Build webhook using provided data
      *
