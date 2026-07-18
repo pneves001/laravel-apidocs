@@ -218,7 +218,7 @@ class Endpoint
     /**
      * Sets endpoint expected response
      *
-     * @param     string     $code     response status code
+     * @param     string     $label     response status code
      * @param     mixed      $response  endpoint response
      * @param     string     $description     optional response description
      * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
@@ -228,7 +228,7 @@ class Endpoint
             // Ensure we are passing the data correctly to the 'set' method
            // FORCE-SET the data directly to see if the Normalizer was the problem
                 $this->set('returns.$label', [
-                    'response'    => $response, // Bypassing normalizeData()
+                    'response'    => (array) $response, // Bypassing normalizeData()
                     'description' => $description,
                 ]);
 
@@ -241,42 +241,7 @@ class Endpoint
      * @param     mixed    $data
      * @return    array
      */
-protected function normalizeData($data): array
-    {
-        // 1. SAFE DEBUGGING: Don't log the array directly
-        // Log::info('Normalizing data type: ' . gettype($data));
 
-        // 2. Already an array? Return it directly. 
-        // This stops it from falling through to (array)$data later.
-        if (is_array($data)) {
-                return $data;
-            }
-
-        // Keep your reflection metadata check
-        if (is_array($data) && isset($data['type']) && $data['type'] === 'class') {
-                return $data; 
-            }
-
-        if (is_string($data)) {
-                $json = json_decode($data, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    return $json;
-                }
-            }
-
-        if (is_object($data)) {
-                if (method_exists($data, 'toArray')) {
-                    return $data->toArray();
-                }
-
-                if ($data instanceof \JsonSerializable) {
-                    return $data->jsonSerialize();
-                }
-            }
-
-        // Final fallback
-        return (array)$data;
-        }
 
     /**
      * Build parameters from given set
