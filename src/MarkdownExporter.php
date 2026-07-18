@@ -48,6 +48,8 @@ class MarkdownExporter
 
     protected function formatResource(array $endpoint): string
     {
+        file_put_contents(storage_path('logs/exporter_debug.log'), json_encode($endpoint) . PHP_EOL, FILE_APPEND);
+
         $md = "### {$endpoint['title']}\n\n";
         if ($endpoint['description'] ?? null) {
             $md .= "{$endpoint['description']}\n\n";
@@ -87,7 +89,7 @@ class MarkdownExporter
                 $md .= "```json\n" . json_encode($example['data'], JSON_PRETTY_PRINT) . "\n```\n\n";
             }
         }
-        
+
         if ($returns = $endpoint['returns'] ?? null) {
                     $md .= "#### Responses\n\n";
                     
