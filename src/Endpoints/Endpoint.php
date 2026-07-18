@@ -232,9 +232,7 @@ class Endpoint
             ];
 
             // 'returns.' + 'success' or 'error' will create an array path like ['returns' => ['success' => ...]]
-            $this->data["returns"][$label] =  $this->normalizeData($response);
-
-            return $this; 
+            return $this->set("returns.$label", $data, FALSE);
         }
 
     /**
