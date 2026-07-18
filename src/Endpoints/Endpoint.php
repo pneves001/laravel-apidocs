@@ -262,32 +262,28 @@ class Endpoint
         })->all();
     }
 
-    /**
-     * Resolve parameter values
-     *
-     * @param     mixed    $value
-     * @return    array              param values
-     * @throws    Pneves001\Apidocs\Exceptions\InvalidParamValue
-     */
-    protected function resolveValue($value): array
-        {
-            if (is_string($value) && class_exists($value)) {
-                try {
-                    // Instead of making the class (which crashes on bad constructors),
-                    // just reflect on it to see if it exists.
-                    $reflection = new \ReflectionClass($value);
-                    
-                    // If you get here, the class exists and is valid. 
-                    // Return a dummy representation instead of the full object.
-                    return ['type' => 'class', 'name' => $reflection->getName()];
-                    
-                } catch (\Throwable $e) {
-                    \Log::error("Apidocs failed to inspect class [$value]: " . $e->getMessage());
-                    return ['error' => 'Incompatible class structure'];
+        protected function resolveValue($value): array
+            {
+                // 1. Handle Class Strings
+                if (is_string($value) && class_exists($value)) {
+                    try {
+                        $reflection = new \ReflectionClass($value);
+                        return ['type' => 'class', 'name' => $reflection->getName()];
+                    } catch (\Throwable $e) {
+                        \Log::error("Apidocs failed to inspect class [$value]: " . $e->getMessage());
+                        return ['error' => 'Incompatible class structure'];
+                    }
                 }
+
+                // 2. Handle Arrays (The case you asked about)
+                if (is_array($value)) {
+                    return $value;
+                }
+
+                // 3. Fallback for everything else (primitives, null, etc.)
+                // Returning an empty array or a structured default prevents the TypeError.
+                return ['type' => gettype($value), 'value' => $value];
             }
-            // ...
-        }
     /**
      * Guess variable name
      *
