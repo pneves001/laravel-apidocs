@@ -87,34 +87,31 @@ class MarkdownExporter
                 $md .= "```json\n" . json_encode($example['data'], JSON_PRETTY_PRINT) . "\n```\n\n";
             }
         }
-        if ($returns = $endpoint['returns'] ?? null) {
-            $md .= "#### Responses\n\n";
-            foreach ($returns as $code => $responses) {
-                // Determine if $responses is a single response or a list of responses
-                // If the first key is numeric, treat as a list; otherwise, wrap it.
-                $responseList = (isset($responses[0]) && is_array($responses[0])) 
-                                ? $responses 
-                                : [$responses];
+       // In src/MarkdownExporter.php
+                    \Log::info("DEBUG RETURNS: " . json_encode($endpoint['returns'])); 
 
-                foreach ($responseList as $response) {
-                    $md .= "**Status Code:** `{$code}`\n";
-                    
-                    // Add a safety check for description key existence
-                    $desc = $response['description'] ?? '';
-                    if (!empty($desc)) {
-                        $md .= "_{$desc}_\n";
+               if ($returns = $endpoint['returns'] ?? null) {
+                    $md .= "#### Responses\n\n";
+                    foreach ($returns as $label => $data) {
+                        // Here, $label will be 'success' or 'error'
+                        $md .= "**Result:** `{$label}`\n";
+                        
+                        // Handle the data structure regardless of whether it's nested
+                        $response = $data['response'] ?? $data;
+                        $description = $data['description'] ?? '';
+
+                        if (!empty($description)) {
+                            $md .= "_{$description}_\n";
+                        }
+                        
+                        $md .= "```json\n" . json_encode($response, JSON_PRETTY_PRINT) . "\n```\n\n";
                     }
-                    
-                    $data = $response['response'] ?? $response;
-                    $md .= "```json\n" . json_encode($data, JSON_PRETTY_PRINT) . "\n```\n\n";
                 }
+
+                $md .= "---\n\n";
+
+                return $md;
             }
-        }
-
-        $md .= "---\n\n";
-
-        return $md;
-    }
 
     protected function formatParams(array $params): string
     {

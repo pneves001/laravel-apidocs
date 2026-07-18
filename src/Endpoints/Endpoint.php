@@ -223,15 +223,17 @@ class Endpoint
      * @param     string     $description     optional response description
      * @return    Pneves001\Apidocs\Endpoints\Endpoint mutated endpoint
      */
-    public function returns(string $code, $response, string $description = ''): Endpoint
-    {
-        $data = [
-            'response' => $this->normalizeData($response),
-            'description' => $description,
-        ];
+        public function returns(string $label, $response, string $description = ''): Endpoint
+        {
+            // Ensure we are passing the data correctly to the 'set' method
+            $data = [
+                'response' => $this->normalizeData($response),
+                'description' => $description,
+            ];
 
-        return $this->set("returns.$code", $data, TRUE);
-    }
+            // 'returns.' + 'success' or 'error' will create an array path like ['returns' => ['success' => ...]]
+            return $this->set("returns.$label", $data, TRUE);
+        }
 
     /**
      * Normalize data for export
