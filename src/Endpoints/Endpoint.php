@@ -243,6 +243,8 @@ class Endpoint
      */
     protected function normalizeData($data): array
     {
+        Log::info($data); 
+
         // Add this to the top of normalizeData
         if (isset($data['type']) && $data['type'] === 'class') {
              return $data; // Keep the reflection metadata intact
