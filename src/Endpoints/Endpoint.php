@@ -229,7 +229,7 @@ class Endpoint
            // FORCE-SET the data directly to see if the Normalizer was the problem
                
 
-                return  $this->set('returns.$label', [
+                return  $this->set("returns.$label", [
                     'response'    => (array) $response, // Bypassing normalizeData()
                     'description' => $description,
                 ]);;
