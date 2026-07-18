@@ -21,19 +21,27 @@ trait KeepsData
      * @return    self
      */
     public function set(string $key, $value, bool $append = FALSE): self
-    {
-        if($append)
         {
-            $current = $this->get($key, []);
-            $current[] = $value;
+            if($append)
+            {
+                $current = $this->get($key, []);
+                
+                // If the data is already an array, append to it. 
+                // If not, treat as a new list.
+                if (!is_array($current)) {
+                    $current = [$current];
+                }
+                $current[] = $value;
 
-            return $this->set($key, $current);
+                // FIX: Pass 'false' here because $current is now the complete array
+                // we want to store. We are finished appending.
+                return $this->set($key, $current, FALSE);
+            }
+
+            Arr::set($this->data, $key, $value);
+
+            return $this;
         }
-
-        Arr::set($this->data, $key, $value);
-
-        return $this;
-    }
 
     /**
      * Remove variable from set
