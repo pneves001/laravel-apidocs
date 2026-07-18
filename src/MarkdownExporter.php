@@ -90,33 +90,34 @@ class MarkdownExporter
             }
         }
 
-        if ($returns = $endpoint['returns'] ?? null) {
-                    $md .= "#### Responses\n\n";
-                    
-                    foreach ($returns as $label => $entry) {
-                        $md .= "##### " . ucfirst($label) . " Response\n";
-                        
-                        // entry contains ['response' => [...], 'description' => '...']
-                        $description = $entry['description'] ?? '';
-                        $responseBody = $entry['response'] ?? null;
+        if ($returns = $endpoint['returns'] ?? null) 
+                {
+                $md .= "#### Responses\n\n";
+                
+                foreach ($returns as $label => $entry) {
+                            $md .= "##### " . ucfirst($label) . " Response\n";
+                            
+                            // entry contains ['response' => [...], 'description' => '...']
+                            $description = $entry['description'] ?? '';
+                            $responseBody = $entry['response'] ?? null;
 
-                        if (!empty($description)) {
-                            $md .= "_{$description}_\n\n";
+                            if (!empty($description)) {
+                                $md .= "_{$description}_\n\n";
+                            }
+                            
+                            // If responseBody is still empty, the normalization failed in the Endpoint class
+                            if ($responseBody !== null) {
+                                $md .= "```json\n" . json_encode($responseBody, JSON_PRETTY_PRINT) . "\n```\n\n";
+                            } else {
+                                $md .= "_Error: Response body was empty. Check Endpoint normalization._\n\n";
+                            }
                         }
-                        
-                        // If responseBody is still empty, the normalization failed in the Endpoint class
-                        if ($responseBody !== null) {
-                            $md .= "```json\n" . json_encode($responseBody, JSON_PRETTY_PRINT) . "\n```\n\n";
-                        } else {
-                            $md .= "_Error: Response body was empty. Check Endpoint normalization._\n\n";
-                        }
-                    }
                 }
 
-                $md .= "---\n\n";
+            $md .= "---\n\n";
 
-                return $md;
-        }
+            return $md;
+            }
 
     protected function formatParams(array $params): string
     {
