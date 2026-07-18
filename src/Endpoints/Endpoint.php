@@ -226,13 +226,13 @@ class Endpoint
         public function returns(string $label, $response, string $description = ''): Endpoint
         {
             // Ensure we are passing the data correctly to the 'set' method
-            $data = [
-                'response' => $this->normalizeData($response),
-                'description' => $description,
-            ];
+           // FORCE-SET the data directly to see if the Normalizer was the problem
+                $this->data['returns'][$label] = [
+                    'response'    => $response, // Bypassing normalizeData()
+                    'description' => $description,
+                ];
 
-            // 'returns.' + 'success' or 'error' will create an array path like ['returns' => ['success' => ...]]
-            return $this->set("returns.$label", $data, FALSE);
+                return $this;
         }
 
     /**
