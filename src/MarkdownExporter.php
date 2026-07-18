@@ -88,25 +88,20 @@ class MarkdownExporter
             }
         }
        // In src/MarkdownExporter.php
-                    \Log::info("DEBUG RETURNS: " . json_encode($endpoint['returns'])); 
-
-               if ($returns = $endpoint['returns'] ?? null) {
-                    $md .= "#### Responses\n\n";
-                    foreach ($returns as $label => $data) {
-                        // Here, $label will be 'success' or 'error'
-                        $md .= "**Result:** `{$label}`\n";
-                        
-                        // Handle the data structure regardless of whether it's nested
-                        $response = $data['response'] ?? $data;
-                        $description = $data['description'] ?? '';
-
-                        if (!empty($description)) {
-                            $md .= "_{$description}_\n";
-                        }
-                        
-                        $md .= "```json\n" . json_encode($response, JSON_PRETTY_PRINT) . "\n```\n\n";
-                    }
+          if ($returns = $endpoint['returns'] ?? null) {
+                $md .= "#### Responses\n\n";
+                
+                foreach ($returns as $label => $data) {
+                    $md .= "##### " . ucfirst($label) . " Response\n";
+                    
+                    // Let's dump the entire $data variable to see what's actually there
+                    $md .= "DEBUG: " . print_r($data, true) . "\n\n";
+                    
+                    $responseBody = $data['response'] ?? 'NO RESPONSE KEY FOUND';
+                    
+                    $md .= "```json\n" . json_encode($responseBody, JSON_PRETTY_PRINT) . "\n```\n\n";
                 }
+            }
 
                 $md .= "---\n\n";
 
