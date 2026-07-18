@@ -87,26 +87,34 @@ class MarkdownExporter
                 $md .= "```json\n" . json_encode($example['data'], JSON_PRETTY_PRINT) . "\n```\n\n";
             }
         }
-       // In src/MarkdownExporter.php
-          if ($returns = $endpoint['returns'] ?? null) {
-                $md .= "#### Responses\n\n";
-                
-                foreach ($returns as $label => $data) {
-                    $md .= "##### " . ucfirst($label) . " Response\n";
+        
+        if ($returns = $endpoint['returns'] ?? null) {
+                    $md .= "#### Responses\n\n";
                     
-                    // Let's dump the entire $data variable to see what's actually there
-                    $md .= "DEBUG: " . print_r($data, true) . "\n\n";
-                    
-                    $responseBody = $data['response'] ?? 'NO RESPONSE KEY FOUND';
-                    
-                    $md .= "```json\n" . json_encode($responseBody, JSON_PRETTY_PRINT) . "\n```\n\n";
+                    foreach ($returns as $label => $entry) {
+                        $md .= "##### " . ucfirst($label) . " Response\n";
+                        
+                        // entry contains ['response' => [...], 'description' => '...']
+                        $description = $entry['description'] ?? '';
+                        $responseBody = $entry['response'] ?? null;
+
+                        if (!empty($description)) {
+                            $md .= "_{$description}_\n\n";
+                        }
+                        
+                        // If responseBody is still empty, the normalization failed in the Endpoint class
+                        if ($responseBody !== null) {
+                            $md .= "```json\n" . json_encode($responseBody, JSON_PRETTY_PRINT) . "\n```\n\n";
+                        } else {
+                            $md .= "_Error: Response body was empty. Check Endpoint normalization._\n\n";
+                        }
+                    }
                 }
-            }
 
                 $md .= "---\n\n";
 
                 return $md;
-            }
+        }
 
     protected function formatParams(array $params): string
     {
