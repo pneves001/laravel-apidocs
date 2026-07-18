@@ -229,7 +229,7 @@ class Endpoint
            // FORCE-SET the data directly to see if the Normalizer was the problem
                 $this->data['returns'][$label] = [
                     'response'    => $response, // Bypassing normalizeData()
-                    'description' => $description,
+                    '' => $description,
                 ];
 
                 return $this;
@@ -241,34 +241,42 @@ class Endpoint
      * @param     mixed    $data
      * @return    array
      */
-    protected function normalizeData($data): array
+protected function normalizeData($data): array
     {
-        Log::info($data); 
+        // 1. SAFE DEBUGGING: Don't log the array directly
+        // Log::info('Normalizing data type: ' . gettype($data));
 
-        // Add this to the top of normalizeData
-        if (isset($data['type']) && $data['type'] === 'class') {
-             return $data; // Keep the reflection metadata intact
-        }
+        // 2. Already an array? Return it directly. 
+        // This stops it from falling through to (array)$data later.
+        if (is_array($data)) {
+                return $data;
+            }
+
+        // Keep your reflection metadata check
+        if (is_array($data) && isset($data['type']) && $data['type'] === 'class') {
+                return $data; 
+            }
 
         if (is_string($data)) {
-            $json = json_decode($data, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return $json;
+                $json = json_decode($data, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $json;
+                }
             }
-        }
 
         if (is_object($data)) {
-            if (method_exists($data, 'toArray')) {
-                return $data->toArray();
+                if (method_exists($data, 'toArray')) {
+                    return $data->toArray();
+                }
+
+                if ($data instanceof \JsonSerializable) {
+                    return $data->jsonSerialize();
+                }
             }
 
-            if ($data instanceof \JsonSerializable) {
-                return $data->jsonSerialize();
-            }
-        }
-
+        // Final fallback
         return (array)$data;
-    }
+        }
 
     /**
      * Build parameters from given set
