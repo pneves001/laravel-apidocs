@@ -197,7 +197,7 @@ class Endpoint
     {
         return $this->set('examples', [
             'title' => $title,
-            'data' => $this->normalizeData($data),
+            'data' => $data,
         ], TRUE);
     }
 
@@ -275,7 +275,7 @@ class Endpoint
                     }
                 }
 
-                // 2. Handle Arrays (The case you asked about)
+                // 2. Handle Arrays (The c ase you asked about)
                 if (is_array($value)) {
                     return $value;
                 }
