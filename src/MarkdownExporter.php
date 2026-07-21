@@ -127,8 +127,8 @@ class MarkdownExporter
             $type = $p['type'] ?? 'string';
             $required = ($p['required'] ?? false) ? 'Yes' : 'No';
             $description = $p['description'] ?? '-';
-            $example = isset($p['example']) ? json_encode($p['example']) : '-';
-            $md .= "| `{$name}` | `{$type}` | {$required} | {$description} | `{$example}` |\n";
+            $example = isset($p['examples']) ? json_encode($p['examples']) : '-';
+            $md .= "| `{$name}` | `{$type}` | {$required} | {$description} | `{$examples}` |\n";
         }
         $md .= "\n";
         return $md;
