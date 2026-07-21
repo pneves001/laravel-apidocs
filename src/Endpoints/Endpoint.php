@@ -227,9 +227,9 @@ class Endpoint
         {
             // Ensure we are passing the data correctly to the 'set' method
            // FORCE-SET the data directly to see if the Normalizer was the problem
-               
+                $key = !empty($description) ? $description : $label;                
 
-                return  $this->set("returns.{$label}", [
+                return  $this->set("returns.{$key}", [
                     'response'    => (array) $response, // Bypassing normalizeData()
                     'description' => $description,
                 ]);;
