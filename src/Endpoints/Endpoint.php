@@ -195,10 +195,10 @@ class Endpoint
      */
     public function example($data, string $title = NULL): Endpoint
     {
-        return $this->set("examples.{$title}", [
+        return $this->set("examples", [
             'title' => $title,
-            'data' => $data,
-        ]);
+            'data' => (array) $data,
+        ], TRUE);
     }
 
     /**
