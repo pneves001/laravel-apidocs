@@ -198,7 +198,7 @@ class Endpoint
         return $this->set("examples.{$title}", [
             'title' => $title,
             'data' => $data,
-        ], FALSE;
+        ]);
     }
 
     /**
